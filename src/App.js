@@ -52,19 +52,18 @@ function App(){
 
   return (
     <Router>
-      <div>
         {currentUser ? (
           
-          <Container component={Grid} container sx={{p:0, m:0}}>
+          <Container component={Grid} container sx={{p:0,}}>
             <Card
                 component={Grid} item container direction='row' alignItems='center'
                 xs={12} sm={9} md={7} lg={6}
-                sx={{mx: 'auto', p:0.3, pl:1, borderRadius: 0, backgroundColor: '#040404', borderColor: '#040404'}}
+                sx={{m: 'auto', p:0.3, pl:1, borderRadius: 0, backgroundColor: '#040404', borderColor: '#040404'}}
                 variant='outlined'
                 justifyContent='space-between'
             >
               <Grid item >
-                <Typography sx={{cursor: 'pointer'}} color='#F7F4F3' fontWeight='bold'>
+                <Typography sx={{cursor: 'pointer'}} fontFamily='Permanent Marker' color='#F7F4F3'>
                   Todo App
                 </Typography>
               </Grid>
@@ -155,8 +154,6 @@ function App(){
             <Route exact path="/" element={<Login />} />
           </Routes>
         </div>
-
-      </div>
     </Router>
   )
 }

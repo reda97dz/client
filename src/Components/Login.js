@@ -52,11 +52,16 @@ const Login = (props) => {
 
     return (
 
-        <Container component={Grid} container sx={{p:0, m:0, mt:5}}>
+        <Container component={Grid} container sx={{p:0, mt:1}}>
+            <Grid item textAlign='center'>
+                <Typography fontFamily='Permanent Marker' variant='h4' sx={{mb:2}} >
+                    Todo App
+                </Typography>
+            </Grid>
             <Card
                 component={Grid} item
                 xs={12} sm={8} md={6} lg={4}
-                sx={{mx: 'auto', borderRadius: 0, backgroundColor: '#fdfdfd', borderColor: '#000'}}
+                sx={{m: 'auto', borderRadius: 0, backgroundColor: '#fdfdfd', borderColor: '#000'}}
                 variant='outlined'
             >
                 <Grid container direction='column'>
