@@ -6,13 +6,14 @@ import Login from './Components/Login'
 import Dashboard from './Components/Dashboard'
 
 import {logout} from './slices/auth'
+import { Navigate } from 'react-router-dom'
 
 import AccountBoxSharpIcon from '@mui/icons-material/AccountBoxSharp'
-import Logout from '@mui/icons-material/Logout'
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp'
 import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemIcon from '@mui/material/ListItemIcon'
 
 import { 
   Grid,
@@ -58,19 +59,19 @@ function App(){
             <Card
                 component={Grid} item container direction='row' alignItems='center'
                 xs={12} sm={9} md={7} lg={6}
-                sx={{mx: 'auto', p:0.3, pl:1, borderRadius: 0, backgroundColor: '#000', borderColor: '#000'}}
+                sx={{mx: 'auto', p:0.3, pl:1, borderRadius: 0, backgroundColor: '#040404', borderColor: '#040404'}}
                 variant='outlined'
                 justifyContent='space-between'
             >
-              <Grid item>
-                <Typography color='#fff' fontWeight='bold'>
+              <Grid item >
+                <Typography sx={{cursor: 'pointer'}} color='#F7F4F3' fontWeight='bold'>
                   Todo App
                 </Typography>
               </Grid>
               <Grid item>
                 <Tooltip title='Account'>
                   <IconButton onClick={handleClick} size='small'>
-                    <AccountBoxSharpIcon size='small' htmlColor='#fff' />
+                    <AccountBoxSharpIcon size='small' htmlColor='#F7F4F3' />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -82,8 +83,9 @@ function App(){
                     elevation: 1,
                     sx: {
                       borderRadius: 0,
-                      backgroundColor: '#222',
+                      backgroundColor: '#040404',
                       overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                       mt: 1.5,
                       '& .MuiAvatar-root': {
                         width: 32,
@@ -99,8 +101,8 @@ function App(){
                         right: 14,
                         width: 10,
                         height: 10,
-                        bgcolor: '#222',
-                        transform: 'translateY(-50%) rotate(45deg)',
+                        bgcolor: '#040404',
+                        transform: 'translateY(-50%) translateX(30%) rotate(45deg)',
                         zIndex: 0,
                       },
                     },
@@ -108,13 +110,19 @@ function App(){
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem sx={{color: 'white'}}>
-                    <Avatar /> {currentUser.last_name} {currentUser.last_name}
+                  <MenuItem sx={{color: '#F5F5F5'}}>
+                    {currentUser.last_name} {currentUser.first_name}
                   </MenuItem>
-                  {/* <Divider light /> */}
-                  <MenuItem sx={{color: 'white'}} onClick={logOut}>
+                  <MenuItem sx={{color: '#F5F5F5'}} >
+                    My spaces
+                  </MenuItem>
+                  <MenuItem sx={{color: '#F5F5F5'}} >
+                    Shared with me
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem sx={{color: '#90323D'}} onClick={logOut}>
                     <ListItemIcon >
-                      <Logout htmlColor='#fff' fontSize="small" />
+                      <LogoutSharpIcon htmlColor='#90323D' fontSize="small" />
                     </ListItemIcon>
                     Logout
                   </MenuItem>
