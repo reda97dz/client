@@ -2,6 +2,17 @@ import React from "react"
 import {Navigate} from 'react-router-dom'
 import { useSelector } from "react-redux" 
 
+import { 
+    Grid, 
+    Paper, 
+    Card, 
+    Typography, 
+    Container, 
+    Button, 
+    InputBase ,
+    Stack
+} from '@mui/material'
+
 const Dashboard = () => {
     const {user: currentUser} = useSelector((state) => state.auth)
 
@@ -10,6 +21,8 @@ const Dashboard = () => {
     }
 
     return (
+
+
         <div>
             <h1>{currentUser.first_name} {currentUser.last_name}</h1>
             <p>
