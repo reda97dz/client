@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Typography, Divider, InputBase, Dialog, Stack } from "@mui/material";
 
-const EditDialog = ({ open, handleEdit, handleClose, todo }) => {
-  const [newText, setNewText] = useState("");
+const AddSpaceDialog = ({ open, handleSubmit, handleClose }) => {
+  const [name, setName] = useState("");
 
-  const editTodo = (e) => {
+  const addSpace = (e) => {
     e.preventDefault();
-    handleEdit(todo.id, { text: newText });
-    setNewText("");
+    console.log(name);
+    handleSubmit({ name: name });
+    setName("");
     handleClose();
   };
 
@@ -15,24 +16,24 @@ const EditDialog = ({ open, handleEdit, handleClose, todo }) => {
     <Dialog
       open={open}
       onClose={() => {
-        setNewText("");
+        setName("");
         handleClose();
       }}
     >
-      <Stack component="form" onSubmit={editTodo} sx={{ mx: 1, mb: 2 }}>
+      <Stack component="form" onSubmit={addSpace} sx={{ mx: 1, mb: 2 }}>
         <Typography fontFamily="Cairo" variant="h6">
-          Editing Todo {todo.id}
+          Create a new space
         </Typography>
         <Divider />
         <Typography fontFamily="Cairo" fontWeight="bold" sx={{ mt: 1 }}>
-          New Text
+          Name your space
         </Typography>
         <InputBase
-          value={newText}
+          value={name}
           autoFocus
-          placeholder="enter new text for your todo"
+          placeholder="type the name of your space"
           onChange={(e) => {
-            setNewText(e.target.value);
+            setName(e.target.value);
           }}
           type="text"
           sx={{
@@ -46,4 +47,4 @@ const EditDialog = ({ open, handleEdit, handleClose, todo }) => {
   );
 };
 
-export default EditDialog;
+export default AddSpaceDialog;
