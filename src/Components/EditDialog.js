@@ -9,13 +9,14 @@ const EditDialog = ({open, handleEdit, handleClose, todo}) => {
     const editTodo = (e) => {
         e.preventDefault()
         handleEdit(todo.id, {text: newText})
+        setNewText('')
         handleClose()
     }
 
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={()=>{setNewText(''); handleClose()}}
         >
             
             <Stack component='form' onSubmit={editTodo} sx={{mx:1, mb:2}}>
@@ -28,6 +29,8 @@ const EditDialog = ({open, handleEdit, handleClose, todo}) => {
                 </Typography>
                 <InputBase
                     value={newText}
+                    autoFocus
+                    placeholder= 'enter new text for your todo'
                     onChange={(e)=>{setNewText(e.target.value)}}
                     type='text' 
                     sx={{ 

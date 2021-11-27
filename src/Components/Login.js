@@ -39,6 +39,9 @@ const Login = (props) => {
         dispatch(login({email, password}))
             .unwrap()
             .then(() => {
+                setEmail('')
+                setPassword('')
+                setLoading(false)
                 props.history.push("/dashboard")
             })
             .catch(() => {
@@ -72,14 +75,19 @@ const Login = (props) => {
                         </Typography>
                     
                     </Grid>
-                    <Grid item sx={{pt: 4, pb: 5}} container direction='column' alignContent='center' spacing={2}>
+                    <Grid 
+                        item container direction='column' 
+                        sx={{pt: 4, pb: 5}}
+                        alignContent='center' spacing={2}
+                    >
                         <Grid item >
                             <Stack>
                                 <Typography fontFamily='Cairo' fontWeight='bold'>
                                     Email
                                 </Typography>
                                 <InputBase
-                                    value={email} 
+                                    value={email}
+                                    autoFocus
                                     onChange={(e)=>{setEmail(e.target.value)}}
                                     disabled={loading} 
                                     type='text' 
@@ -92,7 +100,7 @@ const Login = (props) => {
                             </Stack>
                         </Grid>
                         <Grid item xs>
-                            <Stack>
+                            <Stack component='form' onSubmit={handleLogin}>
                                 <Typography fontFamily='Cairo' fontWeight='bold'>
                                     Password
                                 </Typography >
@@ -125,7 +133,7 @@ const Login = (props) => {
                             </Button>
                         </Grid>
                         {message && (<Grid item xs textAlign='center' sx={{mt:2}}>
-                            <Paper variant='outlined' sx={{borderColor: 'red', p: 0.5}}>
+                            <Paper variant='outlined'  sx={{ borderRadius: 0, borderColor: 'red', p: 0.5}}>
                                 <Typography color='red' fontWeight='bold' fontFamily='Raleway' variant='subtitle2'>
                                     {message}
                                 </Typography>
