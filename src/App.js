@@ -1,16 +1,18 @@
 import React, {useCallback} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 import Login from './Components/Login'
 import Dashboard from './Components/Dashboard'
+import Spaces from './Components/Spaces'
 
 import {logout} from './slices/auth'
 import { Navigate } from 'react-router-dom'
 
 import AccountBoxSharpIcon from '@mui/icons-material/AccountBoxSharp'
 import LogoutSharpIcon from '@mui/icons-material/LogoutSharp'
-import Avatar from '@mui/material/Avatar'
+
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -28,6 +30,7 @@ import {
   Stack, 
   Tooltip
 } from '@mui/material'
+import Shared from './Components/Shared'
 
 
 function App(){
@@ -63,7 +66,7 @@ function App(){
                 justifyContent='space-between'
             >
               <Grid item >
-                <Typography sx={{cursor: 'pointer'}} fontFamily='Permanent Marker' color='#F7F4F3'>
+                <Typography component={NavLink} to='/' sx={{ textDecoration:'none', cursor: 'pointer'}} fontFamily='Permanent Marker' color='#F7F4F3'>
                   Todo App
                 </Typography>
               </Grid>
@@ -109,13 +112,25 @@ function App(){
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem sx={{color: '#F5F5F5'}}>
+                  <MenuItem 
+                    sx={{color: '#F5F5F5'}}
+                    component={NavLink}
+                    to='/dashboard' 
+                  >
                     {currentUser.last_name} {currentUser.first_name}
                   </MenuItem>
-                  <MenuItem sx={{color: '#F5F5F5'}} >
+                  <MenuItem 
+                    sx={{color: '#F5F5F5'}}  
+                    component={NavLink}
+                    to='/my-spaces'
+                  >
                     My spaces
                   </MenuItem>
-                  <MenuItem sx={{color: '#F5F5F5'}} >
+                  <MenuItem 
+                    sx={{color: '#F5F5F5'}}
+                    component={NavLink}
+                    to='/shared-with-me' 
+                  >
                     Shared with me
                   </MenuItem>
                   <Divider />
@@ -151,6 +166,8 @@ function App(){
         <div>
           <Routes>
             <Route exact path="/dashboard" element={<Dashboard/>} />
+            <Route exact path="/my-spaces" element={<Spaces/>} />
+            <Route exact path="/shared-with-me" element={<Shared/>} />
             <Route exact path="/" element={<Login />} />
           </Routes>
         </div>

@@ -84,6 +84,7 @@ const Dashboard = () => {
     const [openDialog, setOpenDialog] = React.useState(false)
 
     const handleDialogOpen = (todo) => {
+        console.log(todo)
         setEditTodo(todo)
         setOpenDialog(true)
     }
@@ -119,7 +120,6 @@ const Dashboard = () => {
             console.log(error)
         }
     }
-
     const open = Boolean(anchorEl)
 
     const handleClick = (event) => {
@@ -144,7 +144,7 @@ const Dashboard = () => {
         setTodos(todos.map(todo => todo.id !== id ? todo : editedTodo.data))
     }
 
-    const handleDoneChange = async (todo) => {
+    const handleToggleTodo = async (todo) => {
         const editedTodo = await userService.editTodo(todo.id, {done: !todo.done})
         setTodos(todos.map(t => t.id !== todo.id ? t : editedTodo.data))
     }
@@ -165,7 +165,7 @@ const Dashboard = () => {
                         <Typography textAlign='center' fontFamily='comfortaa' fontWeight='bold' variant='h5' color='#ECF8F8'>
                             {moment().format('dddd')}
                         </Typography>
-                        <Typography variant='body2' fontFamily='Cairo' fontWeight='bold' color='#353745'>
+                        <Typography variant='body2' textAlign='center' fontFamily='Cairo' fontWeight='bold' color='#353745'>
                             {moment().format('MMM DD, YYYY')}
                         </Typography>
                     </Grid>
@@ -220,114 +220,143 @@ const Dashboard = () => {
                         {todos.length === 0 ? <p>Nothing to see here</p> :
                         todos.map((todo)=>{
                             return(
-                                <Grid key={todo.id} item container direction='row'>
-                                    <Grid item xs={2} md={1} textAlign='left' sx={{mt:0.4}}>
-                                        <IconButton onClick={()=>handleDoneChange(todo)} size='small'>
-                                            {/* <MoreHorizSharp fontSize='small' htmlColor='#979AAF' /> */}
-                                            {todo.done ? <AssignmentTurnedInSharpIcon /> : <AssignmentLateSharpIcon />  }
-                                        </IconButton>
-                                        
-                                        {/* <Checkbox size='small' 
-                                            sx={{
-                                                color: "#2C2E3A",
-                                                '&.Mui-checked': {
-                                                    color: "#2C2E3A"
-                                                }
-                                            }}
-                                            checked={todo.done}
-                                            disabled
-                                            // onChange={}
-                                        /> */}
-                                    </Grid>
-                                    <Grid item xs container direction='column'>
-                                        <Grid item>
-                                            <Typography fontFamily='Cairo' variant='body1' fontWeight='bold' color="#ECF8F8" >
-                                                {todo.text}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item>
-                                            <Typography fontFamily='Cairo' fontWeight='bold' variant='subtitle2' color='#353745'>
-                                                {moment(todo.created_at).format('dddd, MMM DD, Y')}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid xs={2} md={1} item textAlign='center'>
-                                        <IconButton onClick={handleClick} size='small'>
-                                            <MoreHorizSharp fontSize='small' htmlColor='#979AAF' />
-                                        </IconButton>
-                                        <Menu
-                                            anchorEl={anchorEl}
-                                            open={open}
-                                            onClose={handleClose}
-                                            onClick={handleClose}
-                                            PaperProps={{
-                                                elevation: 1,
-                                                sx: {
-                                                    borderRadius: 0,
-                                                    backgroundColor: '#353745',
-                                                    overflow: 'visible',
-                                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                                    '& .MuiAvatar-root': {
-                                                        width: 32,
-                                                        height: 32,
-                                                        ml: -0.5,
-                                                        mr: 1,
-                                                    },
-                                                    '&:before': {
-                                                        content: '""',
-                                                        display: 'block',
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        right: 14,
-                                                        width: 10,
-                                                        height: 10,
-                                                        bgcolor: '#353745',
-                                                        transform: 'translateY(-50%) translateX(30%) rotate(45deg)',
-                                                        zIndex: 0,
-                                                    },
-                                                },
-                                            }}
-                                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                            >
-                                                <MenuItem sx={{color: '#979AAF', py: 0}} onClick={()=>handleDoneChange(todo)}>
-                                                    <ListItemIcon >
-                                                        <RuleSharpIcon htmlColor='#979AAF' fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Mark as {todo.done ? `Undone` : `Done`}
-                                                </MenuItem>
-                                                <Divider />
-                                                <MenuItem sx={{color: '#979AAF', py: 0}} onClick={()=>handleDialogOpen(todo)}>
-                                                    <ListItemIcon >
-                                                        <EditSharpIcon htmlColor='#979AAF' fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Edit
-                                                </MenuItem>
-                                                <Divider />
-                                                <MenuItem sx={{color: '#90323D', py: 0}} onClick={()=>handleDelete(todo.id)}>
-                                                    <ListItemIcon >
-                                                        <DeleteForeverSharpIcon htmlColor='#90323D' fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Delete
-                                                </MenuItem>
-                                            </Menu>
-                                    </Grid>
-                                </Grid>
+                                <Todo 
+                                    key={todo.id} 
+                                    todo={todo} 
+                                    handleToggleTodo={handleToggleTodo}  
+                                    handleDelete={handleDelete}
+                                    handleDialogOpen={handleDialogOpen}
+                                />
                             )
                         })}
-
+                        <EditDialog 
+                            open={openDialog}
+                            handleEdit={handleEdit}
+                            handleClose={handleDialogClose}
+                            todo={editTodo}
+                        />
                     </Paper>
 
                  </Card>
             </Container>
-            <EditDialog 
-                open={openDialog}
-                handleEdit={handleEdit}
-                handleClose={handleDialogClose}
-                todo={editTodo}
-            />
         </>
     )
 }
+
+
+const Todo = ({todo, handleDialogOpen, handleToggleTodo, handleDelete}) => {
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
+    const deleteTodo = () => {
+        handleDelete(todo.id)
+    }
+
+    const editTodo = () => {
+        handleDialogOpen(todo)
+    }
+
+    const toggleTodo = () => {
+        handleToggleTodo(todo)
+    }
+
+    return(
+        <Grid key={todo.id} item container direction='row'>
+            <Grid item xs={2} md={1} textAlign='center' sx={{mt:0.4}}>
+                <IconButton onClick={toggleTodo} size='small'>
+                    {/* <MoreHorizSharp fontSize='small' htmlColor='#979AAF' /> */}
+                    {todo.done ? <AssignmentTurnedInSharpIcon /> : <AssignmentLateSharpIcon />  }
+                </IconButton>
+            </Grid>
+            <Grid item xs container direction='column'>
+                <Grid item>
+                    <Typography fontFamily='Cairo' variant='body1' fontWeight='bold' color="#ECF8F8" >
+                        {todo.id}{todo.text}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <Typography fontFamily='Cairo' fontWeight='bold' variant='subtitle2' color='#353745'>
+                        {moment(todo.created_at).format('dddd, MMM DD, Y')}
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid xs={2} md={1} item textAlign='center'>
+                <IconButton onClick={handleClick} size='small'>
+                    <MoreHorizSharp fontSize='small' htmlColor='#979AAF' />
+                </IconButton>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
+                        elevation: 1,
+                        sx: {
+                            borderRadius: 0,
+                            backgroundColor: '#353745',
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            '& .MuiAvatar-root': {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                            },
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: '#353745',
+                                transform: 'translateY(-50%) translateX(30%) rotate(45deg)',
+                                zIndex: 0,
+                            },
+                        },
+                    }}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                    <MenuItem 
+                        sx={{color: '#979AAF', py: 0}} 
+                        onClick={toggleTodo}
+                    >
+                        <ListItemIcon >
+                            <RuleSharpIcon htmlColor='#979AAF' fontSize="small" />
+                        </ListItemIcon>
+                        Mark as {todo.done ? `Undone` : `Done`}
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem sx={{color: '#979AAF', py: 0}} onClick={editTodo}>
+                        <ListItemIcon >
+                            <EditSharpIcon htmlColor='#979AAF' fontSize="small" />
+                        </ListItemIcon>
+                        Edit
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem sx={{color: '#90323D', py: 0}} onClick={deleteTodo}>
+                        <ListItemIcon >
+                            <DeleteForeverSharpIcon htmlColor='#90323D' fontSize="small" />
+                        </ListItemIcon>
+                        Delete
+                    </MenuItem>
+                </Menu>
+            </Grid>
+        </Grid>
+    )
+}
+
+
 
 export default Dashboard
