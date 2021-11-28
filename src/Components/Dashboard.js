@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, NavLink } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
@@ -9,14 +9,11 @@ import Todo from "./Todo";
 import EditDialog from "./EditTodoDialog";
 
 import NotesSharpIcon from "@mui/icons-material/NotesSharp";
-import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
 
 import {
   Grid,
   Paper,
-  Card,
   Typography,
-  Box,
   Chip,
   InputBase,
   IconButton,

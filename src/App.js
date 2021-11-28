@@ -18,19 +18,14 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 import {
-  Grid,
   IconButton,
   Divider,
-  Card,
   Typography,
-  Container,
   Tooltip,
   AppBar,
   Toolbar,
   Box,
 } from "@mui/material";
-import Shared from "./Components/Shared";
-import Layout from "./Components/Layout";
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.auth);

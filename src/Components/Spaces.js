@@ -1,40 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import AddSpaceDialog from "./AddSpaceDialog";
 import Space from "./Space";
 
 import {
   Grid,
-  Card,
   Paper,
   Typography,
-  Container,
   List,
-  ListSubheader,
-  ListItem,
-  ListItemText,
   AppBar,
   Toolbar,
-  IconButton,
   Box,
   Fab,
-  Stack,
 } from "@mui/material";
 
 import SearchBar from "./SearchBar";
-import {
-  AddSharp,
-  AssignmentTurnedInSharp,
-  MenuSharp,
-  EditSharpIcon,
-  MoreHoriz,
-  MoreHorizSharp,
-  MoreVertSharp,
-  EditSharp,
-  RestartAltSharp,
-} from "@mui/icons-material";
+import { AddSharp } from "@mui/icons-material";
 import { styled } from "@mui/styles";
 import userService from "../services/user.service";
 import EditSpace from "./EditSpaceDialog";
@@ -46,6 +28,7 @@ const Spaces = () => {
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editSpace, setEditSpace] = useState({});
+  const [filteredData, setFilteredData] = useState(undefined);
 
   const handleAddDialogOpen = () => {
     setOpenAddDialog(true);
@@ -67,6 +50,31 @@ const Spaces = () => {
   useEffect(() => {
     getSpaces();
   }, []);
+
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+
+  const requestSearch = (searchValue) => {
+    setSearchText(searchValue);
+    const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
+    const filteredRows = search(searchRegex, spaces);
+    setFilteredData(filteredRows);
+    if (searchValue === "") {
+      clearSearch();
+    }
+  };
+
+  const search = (regex, list) => {
+    return list.filter((row) => {
+      return Object.keys(row).some((field) => {
+        if (row[field]) {
+          return regex.test(row[field].toString());
+        }
+        return false;
+      });
+    });
+  };
 
   const clearSearch = () => {
     setSearchText("");
@@ -133,7 +141,7 @@ const Spaces = () => {
       <Grid item width="85%" sx={{ pb: 4 }}>
         <SearchBar
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={(e) => requestSearch(e.target.value)}
           clearSearch={clearSearch}
           placeholder="Filter my spaces"
         />
@@ -146,16 +154,27 @@ const Spaces = () => {
           sx={{ pb: "50px", backgroundColor: "transparent" }}
         >
           <List sx={{ mb: 2 }}>
-            {spaces.map((space) => {
-              return (
-                <Space
-                  key={space.id}
-                  space={space}
-                  handleEditSpaceDialogOpen={handleEditDialogOpen}
-                  sx={{ pb: 2 }}
-                />
-              );
-            })}
+            {filteredData
+              ? filteredData.map((space) => {
+                  return (
+                    <Space
+                      key={space.id}
+                      space={space}
+                      handleEditSpaceDialogOpen={handleEditDialogOpen}
+                      sx={{ pb: 2 }}
+                    />
+                  );
+                })
+              : spaces.map((space) => {
+                  return (
+                    <Space
+                      key={space.id}
+                      space={space}
+                      handleEditSpaceDialogOpen={handleEditDialogOpen}
+                      sx={{ pb: 2 }}
+                    />
+                  );
+                })}
           </List>
         </Paper>
         <AppBar
