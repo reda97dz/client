@@ -7,6 +7,8 @@ import PrivateRoute from "./Components/PrivateRoute";
 import Login from "./Components/Login";
 import Dashboard from "./Components/Dashboard";
 import Spaces from "./Components/Spaces";
+import PageNotFound from "./Components/PageNotFound";
+import Shared from "./Components/Shared";
 
 import { logout } from "./slices/auth";
 
@@ -26,7 +28,6 @@ import {
   Toolbar,
   Box,
 } from "@mui/material";
-import Shared from "./Components/Shared";
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -152,6 +153,7 @@ function App() {
             <Route exact path="/shared-with-me" element={<Shared />} />
           </Route>
           <Route exact path="/" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
     </Router>
