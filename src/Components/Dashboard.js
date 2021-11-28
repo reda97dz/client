@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import moment from "moment";
-
+import { Helmet } from "react-helmet";
 import userService from "../services/user.service";
 
 import Todo from "./Todo";
@@ -120,6 +120,9 @@ const Dashboard = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Dashboard</title>
+      </Helmet>
       <Grid item sx={{ py: 4 }}>
         <Typography
           textAlign="center"

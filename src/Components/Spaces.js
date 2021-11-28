@@ -20,6 +20,7 @@ import { AddSharp } from "@mui/icons-material";
 import { styled } from "@mui/styles";
 import userService from "../services/user.service";
 import EditSpace from "./EditSpaceDialog";
+import { Helmet } from "react-helmet";
 
 const Spaces = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -126,6 +127,9 @@ const Spaces = () => {
 
   return (
     <>
+      <Helmet>
+        <title>My Spaces</title>
+      </Helmet>
       <Grid item sx={{ py: 4 }}>
         <Typography
           textAlign="center"

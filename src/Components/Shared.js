@@ -18,6 +18,7 @@ import {
   // IconButton,
   // Stack
 } from "@mui/material";
+import { Helmet } from "react-helmet";
 
 const Shared = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -28,6 +29,9 @@ const Shared = () => {
 
   return (
     <Grid item sx={{ py: 4 }}>
+      <Helmet>
+        <title>Spaces Shared With Me</title>
+      </Helmet>
       <Typography
         textAlign="center"
         fontFamily="comfortaa"

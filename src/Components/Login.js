@@ -15,6 +15,7 @@ import {
   InputBase,
   Stack,
 } from "@mui/material";
+import { Helmet } from "react-helmet";
 
 const Login = (props) => {
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,9 @@ const Login = (props) => {
 
   return (
     <Container component={Grid} container sx={{ p: 0, mt: 1 }}>
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
       <Grid item textAlign="center">
         <Typography fontFamily="Permanent Marker" variant="h4" sx={{ mb: 2 }}>
           Todo App
