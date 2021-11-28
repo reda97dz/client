@@ -2,27 +2,27 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 const getTodos = () => {
-  return axios.get("http://localhost:5000/api/todos", {
+  return axios.get("api/todos", {
     headers: authHeader(),
   });
 };
 
 const addTodo = (todoObject) => {
-  const newTodo = axios.post("http://localhost:5000/api/todos", todoObject, {
+  const newTodo = axios.post("api/todos", todoObject, {
     headers: authHeader(),
   });
   return newTodo;
 };
 
 const removeTodo = (id) => {
-  axios.delete(`http://localhost:5000/api/todos/${id}`, {
+  axios.delete(`api/todos/${id}`, {
     headers: authHeader(),
   });
 };
 
 const editTodo = (id, newTodo) => {
   const editedTodo = axios.put(
-    `http://localhost:5000/api/todos/${id}`,
+    `api/todos/${id}`,
     { ...newTodo },
     { headers: authHeader() }
   );
@@ -30,13 +30,13 @@ const editTodo = (id, newTodo) => {
 };
 
 const getSpaces = () => {
-  return axios.get("http://localhost:5000/api/spaces", {
+  return axios.get("api/spaces", {
     headers: authHeader(),
   });
 };
 
 const addSpace = (spaceObject) => {
-  const newSpace = axios.post("http://localhost:5000/api/spaces", spaceObject, {
+  const newSpace = axios.post("api/spaces", spaceObject, {
     headers: authHeader(),
   });
   return newSpace;
@@ -44,7 +44,7 @@ const addSpace = (spaceObject) => {
 
 const editSpace = (id, newSpace) => {
   const editedSpace = axios.put(
-    `http://localhost:5000/api/spaces/${id}`,
+    `api/spaces/${id}`,
     { ...newSpace },
     { headers: authHeader() }
   );
@@ -52,13 +52,13 @@ const editSpace = (id, newSpace) => {
 };
 
 const removeSpace = (id) => {
-  axios.delete(`http://localhost:5000/api/spaces/${id}`, {
+  axios.delete(`api/spaces/${id}`, {
     headers: authHeader(),
   });
 };
 
 const getSharedSpaces = () => {
-  return axios.get("http://localhost:5000/api/sharedSpaces", {
+  return axios.get("api/sharedSpaces", {
     headers: authHeader(),
   });
 };

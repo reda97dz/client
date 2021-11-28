@@ -26,6 +26,7 @@ import {
   Toolbar,
   Box,
 } from "@mui/material";
+import Shared from "./Components/Shared";
 
 function App() {
   const { user: currentUser } = useSelector((state) => state.auth);
@@ -141,18 +142,16 @@ function App() {
 
       <div>
         <Routes>
-          <Route exact key="dash" path="/dashboard" element={<PrivateRoute />}>
-            <Route
-              exact
-              key="dash1"
-              path="/dashboard"
-              element={<Dashboard />}
-            />
+          <Route exact path="/dashboard" element={<PrivateRoute />}>
+            <Route exact path="/dashboard" element={<Dashboard />} />
           </Route>
-          <Route exact key="space" path="/my-spaces" element={<PrivateRoute />}>
-            <Route exact key="space1" path="/my-spaces" element={<Spaces />} />
+          <Route exact path="/my-spaces" element={<PrivateRoute />}>
+            <Route exact path="/my-spaces" element={<Spaces />} />
           </Route>
-          <Route exact key="login" path="/" element={<Login />} />
+          <Route exact path="/shared-with-me" element={<PrivateRoute />}>
+            <Route exact path="/shared-with-me" element={<Shared />} />
+          </Route>
+          <Route exact path="/" element={<Login />} />
         </Routes>
       </div>
     </Router>
