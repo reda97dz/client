@@ -146,13 +146,18 @@ function App() {
 
       <div>
         <Routes>
-          <Route exact path="/dashboard" element={<PrivateRoute />}>
-            <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact key="dash" path="/dashboard" element={<PrivateRoute />}>
+            <Route
+              exact
+              key="dash1"
+              path="/dashboard"
+              element={<Dashboard />}
+            />
           </Route>
-          <Route exact path="/my-spaces" element={<PrivateRoute />}>
-            <Route exact path="/my-spaces" element={<Spaces />} />
+          <Route exact key="space" path="/my-spaces" element={<PrivateRoute />}>
+            <Route exact key="space1" path="/my-spaces" element={<Spaces />} />
           </Route>
-          <Route exact path="/" element={<Login />} />
+          <Route exact key="login" path="/" element={<Login />} />
         </Routes>
       </div>
     </Router>

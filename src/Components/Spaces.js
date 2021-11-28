@@ -37,12 +37,15 @@ import {
 } from "@mui/icons-material";
 import { styled } from "@mui/styles";
 import userService from "../services/user.service";
+import EditSpace from "./EditSpaceDialog";
 
 const Spaces = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [searchText, setSearchText] = useState("");
   const [spaces, setSpaces] = useState([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editSpace, setEditSpace] = useState({});
 
   const handleAddDialogOpen = () => {
     setOpenAddDialog(true);
@@ -50,6 +53,15 @@ const Spaces = () => {
 
   const handleAddDialogClose = () => {
     setOpenAddDialog(false);
+  };
+
+  const handleEditDialogOpen = (space) => {
+    setEditSpace(space);
+    setOpenEditDialog(true);
+  };
+
+  const handleEditDialogClose = () => {
+    setOpenEditDialog(false);
   };
 
   useEffect(() => {
@@ -67,6 +79,7 @@ const Spaces = () => {
   async function getSpaces() {
     try {
       const res = await userService.getSpaces();
+      console.log(res.data);
       setSpaces(res.data);
     } catch (error) {
       console.log(error);
@@ -79,6 +92,25 @@ const Spaces = () => {
       console.log(`${res.data.name} added`);
       const getSpaces = await userService.getSpaces();
       setSpaces(getSpaces.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEdit = async (id, newSpace) => {
+    try {
+      const editedSpace = await userService.editSpace(id, newSpace);
+      const getSpaces = await userService.getSpaces();
+      setSpaces(getSpaces.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      userService.removeSpace(id);
+      setSpaces(spaces.filter((space) => space.id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +147,14 @@ const Spaces = () => {
         >
           <List sx={{ mb: 2 }}>
             {spaces.map((space) => {
-              return <Space key={space.id} space={space} sx={{ pb: 2 }} />;
+              return (
+                <Space
+                  key={space.id}
+                  space={space}
+                  handleEditSpaceDialogOpen={handleEditDialogOpen}
+                  sx={{ pb: 2 }}
+                />
+              );
             })}
           </List>
         </Paper>
@@ -125,7 +164,6 @@ const Spaces = () => {
             top: "auto",
             bottom: 0,
             backgroundColor: "#040404",
-            height: 30,
           }}
         >
           <Toolbar>
@@ -148,6 +186,13 @@ const Spaces = () => {
           handleClose={handleAddDialogClose}
           open={openAddDialog}
           handleSubmit={handleAddSpace}
+        />
+        <EditSpace
+          open={openEditDialog}
+          handleEdit={handleEdit}
+          handleClose={handleEditDialogClose}
+          space={editSpace}
+          handleDelete={handleDelete}
         />
       </Grid>
     </>

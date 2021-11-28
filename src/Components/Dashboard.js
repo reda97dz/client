@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
 import userService from "../services/user.service";
 
 import Todo from "./Todo";
-import EditDialog from "./EditDialog";
+import EditDialog from "./EditTodoDialog";
 
 import NotesSharpIcon from "@mui/icons-material/NotesSharp";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
@@ -20,15 +20,33 @@ import {
   Chip,
   InputBase,
   IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Divider,
 } from "@mui/material";
+import { KeyboardDoubleArrowDownSharp } from "@mui/icons-material";
 
 const Dashboard = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const [todos, setTodos] = useState([]);
   const [todoText, setTodoText] = useState("");
   const [editTodo, setEditTodo] = useState({});
+  const [selectedSpace, setSelectedSpace] = useState(null);
+  const [spaces, setSpaces] = useState([]);
 
   const [openDialog, setOpenDialog] = React.useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const openDropMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleDialogOpen = (todo) => {
     console.log(todo);
@@ -42,6 +60,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getTodos();
+    getSpaces();
   }, []);
 
   async function getTodos() {
@@ -53,6 +72,11 @@ const Dashboard = () => {
     }
   }
 
+  async function getSpaces() {
+    const res = await userService.getSpaces();
+    setSpaces(res.data);
+  }
+
   if (!currentUser) {
     return <Navigate to="/" />;
   }
@@ -60,7 +84,12 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await userService.addTodo({ text: todoText });
+      const space = selectedSpace ? selectedSpace.id : null;
+      console.log({ text: todoText, space_id: space });
+      const res = await userService.addTodo({
+        text: todoText,
+        space_id: space,
+      });
       setTodos(todos.concat(res.data));
       setTodoText("");
     } catch (error) {
@@ -79,14 +108,17 @@ const Dashboard = () => {
 
   const handleEdit = async (id, newTodo) => {
     const editedTodo = await userService.editTodo(id, newTodo);
-    setTodos(todos.map((todo) => (todo.id !== id ? todo : editedTodo.data)));
+    const getTodos = await userService.getTodos();
+    setTodos(getTodos.data);
+    // setTodos(todos.map((todo) => (todo.id !== id ? todo : editedTodo.data)));
   };
 
   const handleToggleTodo = async (todo) => {
     const editedTodo = await userService.editTodo(todo.id, {
       done: !todo.done,
     });
-    setTodos(todos.map((t) => (t.id !== todo.id ? t : editedTodo.data)));
+    const getTodos = await userService.getTodos();
+    setTodos(getTodos.data);
   };
 
   return (
@@ -134,18 +166,66 @@ const Dashboard = () => {
             value={todoText}
             onChange={(e) => setTodoText(e.target.value)}
           />
-          <Chip
-            label="Work"
-            onDelete={() => {
-              console.log("delete");
+          {selectedSpace && (
+            <Chip
+              label={`${selectedSpace.name}`}
+              onDelete={() => {
+                setSelectedSpace(null);
+              }}
+              size="small"
+              variant="outlined"
+              color="primary"
+            />
+          )}
+          <Tooltip title="show spaces">
+            <IconButton onClick={openDropMenu}>
+              <KeyboardDoubleArrowDownSharp
+                fontSize="small"
+                htmlColor="#979AAF"
+              />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              square: true,
+              elevation: 0,
+              sx: {
+                borderRadius: 0,
+                backgroundColor: "#353745",
+                borderColor: "#2C2E3A",
+                overflow: "visible",
+                mt: 0.1,
+              },
             }}
-            size="small"
-            variant="outlined"
-            color="primary"
-          />
-          <IconButton>
-            <MoreVertSharpIcon fontSize="small" htmlColor="#979AAF" />
-          </IconButton>
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem
+              sx={{ color: "#979AAF" }}
+              onClick={() => {
+                setSelectedSpace(null);
+              }}
+            >
+              No space
+            </MenuItem>
+            {spaces.map((space) => {
+              return (
+                <MenuItem
+                  key={space.id}
+                  sx={{ color: "#979AAF" }}
+                  onClick={() => {
+                    setSelectedSpace(space);
+                  }}
+                >
+                  {space.name}
+                </MenuItem>
+              );
+            })}
+          </Menu>
         </Paper>
       </Grid>
       <Paper
@@ -169,13 +249,16 @@ const Dashboard = () => {
         ) : (
           todos.map((todo) => {
             return (
-              <Todo
-                key={todo.id}
-                todo={todo}
-                handleToggleTodo={handleToggleTodo}
-                handleDelete={handleDelete}
-                handleDialogOpen={handleDialogOpen}
-              />
+              <React.Fragment key={todo.id}>
+                <Todo
+                  showSpace={true}
+                  todo={todo}
+                  handleToggleTodo={handleToggleTodo}
+                  handleDelete={handleDelete}
+                  handleDialogOpen={handleDialogOpen}
+                />
+                <Divider width="95%" sx={{ mt: 2 }} />
+              </React.Fragment>
             );
           })
         )}
